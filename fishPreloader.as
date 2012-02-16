@@ -13,6 +13,9 @@
 		
 		public var loader:Loader = new Loader();
 		public var pct:Number = 0;
+		public var cnt:Number = 0;
+		public var Bubble:MovieClip;
+		
 		
 		public function fishPreloader() {
 			// constructor code
@@ -26,6 +29,8 @@
 			//go get the image
 			loader.load(req);
 			//start adding clouds
+			
+			
 //			this.addEventListener(Event.ENTER_FRAME, goLoopy);
 
 		} // end function fishPreloader
@@ -41,7 +46,7 @@
 			//add what you loaded to the stage
 			loader.scaleX = loader.scaleY = .9;
 			
-			clock.visible = false;
+			fish_mc.visible = false;
 			//hide your preloader
 			trace("Image could be added to the stage now.");
 		} // end function imageLoaded
@@ -51,6 +56,16 @@ trace("In function loading: ");
 			//ProgressEvent.PROGRESS
 			pct = ev.bytesLoaded/ev.bytesTotal;
 			trace( ev.bytesLoaded + " / " + ev.bytesTotal + " = " + pct);
+			var newPos:Number = pct * stage.stageWidth;
+			fish_mc.x = newPos;
+			
+			Bubble = new Bubble();
+			
+			var strPct:String = Math.round( pct * 100).toString();
+			Bubble_txt.text = strPct + "%";
+			Bubble.x = newPos + 22;
+			Bubble.y = 352;
+			
 			/**
 			We want to have the rocket rotate from 0degrees to -90degrees. 
 			A range of 90degrees in the negative direction
@@ -102,7 +117,7 @@ trace("In function loading: ");
 			//IOErrorEvent.IO_ERROR
 			trace("Could not open file. " + ev.text );
 			loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-				clock.text = "404 ERROR!!!!";
+				Bubble.text = "404 ERROR!!!!";
 		} // end function fileRead
 		
 		public function httpReady(ev:HTTPStatusEvent):void{
@@ -115,7 +130,7 @@ trace("In function loading: ");
 			if( ev.status == 404){
 				//write a message to the user
 				loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-				clock.text = "404 ERROR!!!!";
+				Bubble.text = "404 ERROR!!!!";
 			} // end if
 		} // end function httpReady
 		
