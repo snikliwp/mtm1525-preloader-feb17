@@ -4,18 +4,20 @@
 	import flash.events.Event;
 	
 	
-	public class Bubble extends MovieClip {
+	public class bubble extends MovieClip {
 		
 		public var xvel:Number = 0;
 		public var yvel:Number = 0;
 
-	public function Bubble() {
+	public function bubble() {
+//		trace("in function bubble: ");
 			// constructor code
 			addEventListener(Event.ENTER_FRAME, goFrame);
 		} // end function Bubble
 		
 		
 		public function goFrame(ev:Event):void{
+//		trace("in function goFrame: ");
 			//move gradually towards the top of the screen
 			//drift randomly left or right
 			//slowly rotate
@@ -26,7 +28,11 @@
 			x += xvel;
 			y += yvel;
 			alpha -= Math.random() * 0.02; //up to 2% reduction per frame
-			rotation += Math.random() * 3 - 1.5;
+//			rotation += Math.random() * 3 - 1.5;
+			if(scaleX < 1) {
+				scaleX = scaleY = scaleX + .03;
+			}// end if
+
 			if(y < 0 || alpha < 0.01){
 				removeEventListener(Event.ENTER_FRAME, goFrame);
 				parent.removeChild(this);

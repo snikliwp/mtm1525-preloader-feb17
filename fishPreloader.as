@@ -8,30 +8,25 @@
 	import flash.events.IOErrorEvent;
 	import flash.events.HTTPStatusEvent;
 	
-	
 	public class fishPreloader extends MovieClip {
 		
 		public var loader:Loader = new Loader();
 		public var pct:Number = 0;
-		public var cnt:Number = 0;
-		public var Bubble:MovieClip;
+		public var cnt:Number = 1;
+		public var ylev:Number = 0;
 		
 		
 		public function fishPreloader() {
 			// constructor code
 			
-			var req:URLRequest = new URLRequest("big_image.jpg");
+			var req:URLRequest = new URLRequest("simFish-as2-version.swf");
 			loader.contentLoaderInfo.addEventListener(Event.INIT, infoReady);
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
 			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, loading);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, fileRead);
 			loader.contentLoaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpReady);
-			//go get the image
+			//go get the file
 			loader.load(req);
-			//start adding clouds
-			
-			
-//			this.addEventListener(Event.ENTER_FRAME, goLoopy);
 
 		} // end function fishPreloader
 		
@@ -44,80 +39,42 @@
 			//event.complete
 			addChild( loader );
 			//add what you loaded to the stage
-			loader.scaleX = loader.scaleY = .9;
-			
 			fish_mc.visible = false;
 			//hide your preloader
 			trace("Image could be added to the stage now.");
 		} // end function imageLoaded
 		
 		public function loading(ev:ProgressEvent):void{
-trace("In function loading: ");
+//trace("In function loading: ");
 			//ProgressEvent.PROGRESS
 			pct = ev.bytesLoaded/ev.bytesTotal;
-			trace( ev.bytesLoaded + " / " + ev.bytesTotal + " = " + pct);
 			var newPos:Number = pct * stage.stageWidth;
 			fish_mc.x = newPos;
 			
-			Bubble = new Bubble();
+			ylev = Math.random() * 0.09 - 0.085;
+			trace("ylev = ", ylev);
+			fish_mc.y = fish_mc.y + ylev;
 			
-			var strPct:String = Math.round( pct * 100).toString();
-			Bubble_txt.text = strPct + "%";
-			Bubble.x = newPos + 22;
-			Bubble.y = 352;
-			
-			/**
-			We want to have the rocket rotate from 0degrees to -90degrees. 
-			A range of 90degrees in the negative direction
-			**/
-			/**/
-//			mc_hourHand.rotation=(num_hour+(dte_currentDate.minutes/60)+(dte_currentDate.seconds/3600))*30;
-//
-//			mc_minHand.rotation=(dte_currentDate.minutes+(dte_currentDate.seconds/60))*6;
-//
-//			mc_secHand.rotation=dte_currentDate.seconds*6;
-
-//			clock.littleHand_mc.rotation = pct * 360;
-//trace("In function loading: 1");
-//			clock.bigHand_mc.rotation = pct * 360 * 10;
-//trace("In function loading: 2");
-//			var strPct:String = Math.round( pct * 100).toString();
-//trace("In function loading: 3");
-//			clock.pct_txt.text = strPct + "%";
-//trace("In function loading: 4");
-			
-			
-			
-			
-			/*var newPos:Number = pct * stage.stageWidth;
-			launcher_mc.x = newPos;
-			*/
-			/*var flip:Number = (pct * 2) - 1;		//start with a value of 1 and end with -1
-			launcher_mc.scaleX = flip;
-			
-			var a:Number = pct;				//we want the inverse of this.
-			launcher_mc.alpha = a;*/
-			
-//			var fr:Number = Math.round(pct * pink_square_mc.totalFrames);
-//			pink_square_mc.gotoAndStop(fr);
-			//rounding off the frame number is necessary for this to work
-			
-			//write out the percentage loaded
-			//get rid of the decimal places
-			//make the number between 0 and 100 instead of 0 and 1.
-			
-			
-			//When we get to 95% loaded... stop adding clouds
-//			if( pct >= .95){
-//				this.removeEventListener(Event.ENTER_FRAME, goLoopy);
-//			} // end if
+			if (Math.round(pct*100) != cnt) {
+				
+				var mc:MovieClip = new bubble();
+				
+				var strPct:String = Math.round( pct * 100).toString();
+				mc.bubble_txt.text = strPct + " %";
+				mc.x = newPos + 22;
+				mc.y = fish_mc.y + 12; // 352;
+				mc.scaleX = mc.scaleY = 0;
+				cnt = Math.round(pct*100);
+				addChild(mc);
+				
+			} // end if
 		} // end function loading
 		
 		public function fileRead(ev:IOErrorEvent):void{
 			//IOErrorEvent.IO_ERROR
 			trace("Could not open file. " + ev.text );
 			loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-				Bubble.text = "404 ERROR!!!!";
+//				Bubble.Bubble_txt = "404 ERROR!!!!";
 		} // end function fileRead
 		
 		public function httpReady(ev:HTTPStatusEvent):void{
@@ -130,7 +87,7 @@ trace("In function loading: ");
 			if( ev.status == 404){
 				//write a message to the user
 				loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-				Bubble.text = "404 ERROR!!!!";
+//				Bubble.Bubble_txt = "404 ERROR!!!!";
 			} // end if
 		} // end function httpReady
 		
