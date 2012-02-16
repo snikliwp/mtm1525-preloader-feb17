@@ -57,32 +57,30 @@
 				var mc:MovieClip = new bubble();
 				var strPct:String = Math.round( pct * 100).toString();
 				mc.bubble_txt.text = strPct + " %";
-				mc.x = newPos + 22;
-				mc.y = fish_mc.y - 42; // (-12)352;
-//				mc.scaleX = mc.scaleY = 0;
+				mc.x = newPos  + 20;
+				mc.y = fish_mc.y + 12; // (-12)352;
+				mc.scaleX = mc.scaleY = .01;
 				cnt = Math.round(pct*100);
-				mc.z = 100;
 				addChild(mc);
-				
 				} // end if
 			} // end function loading
 		
 		public function fileRead(ev:IOErrorEvent):void{
 			//IOErrorEvent.IO_ERROR
 			loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-			background_mc.error_txt = "404 ERROR!!!!";
+			background_mc.error_txt.text = "404 ERROR!!!!";
 			} // end function fileRead
 		
 		public function httpReady(ev:HTTPStatusEvent):void{
 			//HTTPStatusEvent.HTTP_STATUS
 			if( ev.status != 0){
-			background_mc.error_txt = String(ev.status) + " ERROR!!!!";
+			background_mc.error_txt.text = String(ev.status) + " ERROR!!!!";
 			} // end if
 			
 			if( ev.status == 404){
 				//write a message to the user
 				loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-				background_mc.error_txt = "404 ERROR!!!!";
+				background_mc.error_txt.text = "404 ERROR!!!!";
 				} // end if
 			} // end function httpReady
 		
