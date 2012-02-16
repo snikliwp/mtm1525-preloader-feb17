@@ -28,101 +28,63 @@
 			//go get the file
 			loader.load(req);
 
-		} // end function fishPreloader
+			} // end function fishPreloader
 		
 		public function infoReady(ev:Event):void{
 			//event.init
-			trace("Image info is ready. width:" + ev.target.width);
-		} // end function infoReady
+			} // end function infoReady
 		
 		public function imageLoaded(ev:Event):void{
 			//event.complete
 			addChild( loader );
 			//add what you loaded to the stage
-			fish_mc.visible = false;
-			//hide your preloader
-			trace("Image could be added to the stage now.");
-		} // end function imageLoaded
+			//remove all the preloader stuff
+			fish_mc.parent.removeChild(fish_mc);
+			background_mc.parent.removeChild(background_mc);
+			} // end function imageLoaded
 		
 		public function loading(ev:ProgressEvent):void{
-//trace("In function loading: ");
 			//ProgressEvent.PROGRESS
 			pct = ev.bytesLoaded/ev.bytesTotal;
 			var newPos:Number = pct * stage.stageWidth;
 			fish_mc.x = newPos;
-			
+			// give the fish some random verticle movement
 			ylev = Math.random() * 0.09 - 0.085;
-			trace("ylev = ", ylev);
 			fish_mc.y = fish_mc.y + ylev;
-			
+			// only issue a new bubble at a whole percentage value
 			if (Math.round(pct*100) != cnt) {
 				
 				var mc:MovieClip = new bubble();
-				
 				var strPct:String = Math.round( pct * 100).toString();
 				mc.bubble_txt.text = strPct + " %";
 				mc.x = newPos + 22;
-				mc.y = fish_mc.y + 12; // 352;
-				mc.scaleX = mc.scaleY = 0;
+				mc.y = fish_mc.y - 42; // (-12)352;
+//				mc.scaleX = mc.scaleY = 0;
 				cnt = Math.round(pct*100);
+				mc.z = 100;
 				addChild(mc);
 				
-			} // end if
-		} // end function loading
+				} // end if
+			} // end function loading
 		
 		public function fileRead(ev:IOErrorEvent):void{
 			//IOErrorEvent.IO_ERROR
-			trace("Could not open file. " + ev.text );
 			loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-//				Bubble.Bubble_txt = "404 ERROR!!!!";
-		} // end function fileRead
+			background_mc.error_txt = "404 ERROR!!!!";
+			} // end function fileRead
 		
 		public function httpReady(ev:HTTPStatusEvent):void{
 			//HTTPStatusEvent.HTTP_STATUS
-			trace("HTTP status code is " + ev.status);
 			if( ev.status != 0){
-				trace(" from " + ev.responseURL);
+			background_mc.error_txt = String(ev.status) + " ERROR!!!!";
 			} // end if
 			
 			if( ev.status == 404){
 				//write a message to the user
 				loader.removeEventListener(ProgressEvent.PROGRESS, loading);
-//				Bubble.Bubble_txt = "404 ERROR!!!!";
-			} // end if
-		} // end function httpReady
-		
-//		public function goLoopy(ev:Event):void{
-//			//add clouds at the base of the rocket
-//			var _x:Number = launcher_mc.x + Math.random() * 20 - 10;	// 10 to 20
-//			var _y:Number = launcher_mc.y + Math.random() * 20 - 10;	// 10 to 20
-//			//var _x:Number = Math.random() * 20 - 10;	// 10 to 20
-//			//var _y:Number = Math.random() * 20 - 10;	// 10 to 20
-//			var _rot:Number = Math.random() * 360;							// 0 to 360
-//			var _scale:Number = Math.random() * 0.8 + 0.2;  //between 20% and 100%
-//			var c:MovieClip;
-//			//if( Math.round(Math.random()) == 1){
-//			if( pct < 0.50){
-//				 c = new Cloud();
-//			}else{
-//				c = new CloudB();
-//			}  // end else
-//			c.rotation = _rot;
-//			c.scaleX = c.scaleY = _scale;
-//			c.x = _x;
-//			c.y = _y;
-//			addChild(c);
-//			
-//		} // end if
-		
-//			} // end function goLoopy
-		
-		
-		
-		
-		
-		
-		
-		
+				background_mc.error_txt = "404 ERROR!!!!";
+				} // end if
+			} // end function httpReady
 		
 	} // end class fishPreloader
 	
